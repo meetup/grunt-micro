@@ -55,7 +55,7 @@ module.exports = function(grunt) {
                 results.exceedsLimit ? 'OVERSIZE' : 'Warning:',
                 fileInfo,
                 results.exceedsLimit ? 'exceeds' : 'approaching',
-                'limit of ' + Math.floor(limit.error/1000), 'kb,',
+                'limit of ' + Math.floor(limit.error/1000) + 'kb,',
                 Math.floor((limit.error - results.size)/1000) + 'kb remaining'
               ].join(" "));
 
