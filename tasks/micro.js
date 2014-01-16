@@ -50,7 +50,7 @@ module.exports = function(grunt) {
         // show warning or bail out if we are over warning/error limit
         utils.exceedsLimit(contents, limit, gzip, function(err, results) {
           if (results.exceedsLimit || results.exceedsWarn) {
-            var fileInfo = filepath + '" (' + results.size + ' bytes' + (gzip ? ' Gzipped' : '') + ')',
+            var fileInfo = filepath + ' (' + results.size + ' bytes' + (gzip ? ' Gzipped' : '') + ')',
               message = ([
                 results.exceedsLimit ? 'OVERSIZE' : 'Warning:',
                 fileInfo,
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
                 Math.floor(limit.error - results.size) + ' bytes remaining'
               ].join(" "));
 
-            grunt.log.errorlns(message);
+            grunt.log.error(message);
           }
 
           if (results.exceedsLimit) {
