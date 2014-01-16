@@ -52,13 +52,14 @@ module.exports = function(grunt) {
           if (results.exceedsLimit || results.exceedsWarn) {
             var fileInfo = filepath + '" (' + results.size + ' bytes' + (gzip ? ' Gzipped' : '') + ')',
               message = ([
+                results.exceedsLimit ? 'OVERSIZE' : 'Warning:'
                 fileInfo,
                 results.exceedsLimit ? 'exceeds' : 'approaching',
                 'limit of ' + Math.floor(limit.error/1000), ' bytes,',
                 Math.floor(limit.error - results.size) + ' bytes remaining'
               ].join(" "));
 
-            grunt.log.error(message);
+            grunt.log.errorlns(message);
           }
 
           if (results.exceedsLimit) {
