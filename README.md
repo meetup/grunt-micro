@@ -4,6 +4,8 @@
 
 Forked in order to add warning feature - will submit pull request and see how it goes.
 
+Needs tests before sending pull request.
+
 # grunt-micro
 
 #### Ensure your micro-framework stays micro.

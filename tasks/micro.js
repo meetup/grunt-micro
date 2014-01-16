@@ -18,13 +18,14 @@ module.exports = function(grunt) {
 
     var fileCount = 0,
       hasErrors = false,
-      targetLimit,
-      targetGzipped,
       promises = [];
 
     // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      limit: 5 * 1024,
+      limit: {
+        warn: Infinity,
+        error: 5 * 1024
+      },
       gzip: true
     });
 
@@ -46,16 +47,19 @@ module.exports = function(grunt) {
           limit = (f.limit !== undefined ? f.limit : options.limit),
           gzip = (f.gzip !== undefined ? f.gzip : options.gzip);
 
-        targetLimit = limit;
-        targetGzipped = gzip;
-
+        // show warning or bail out if we are over warning/error limit
         utils.exceedsLimit(contents, limit, gzip, function(err, results) {
-          var log = grunt.log[results.exceedsLimit ? 'error' : 'ok'];
+          if (results.exceedsLimit || results.exceedsWarn) {
+            var fileInfo = filepath + '" (' + results.size + ' bytes' + (gzip ? ' Gzipped' : '') + ')',
+              message = ([
+                fileInfo,
+                results.exceedsLimit ? 'exceeds' : 'approaching',
+                'limit of ' + Math.floor(limit.error/1000), ' bytes,',
+                Math.floor(limit.error - results.size) + ' bytes remaining'
+              ].join(" "));
 
-          log('File "' + filepath + '" (' + results.size + ' bytes' + (gzip ? ' Gzipped' : '') + ') ' +
-            (results.exceedsLimit ?
-              'exceeds limit of ' + limit + ' bytes by ' + (results.size - limit) + ' bytes.' :
-              'is within limit of ' + limit + ' bytes.'));
+            grunt.log.error(message);
+          }
 
           if (results.exceedsLimit) {
             deferred.reject();
